@@ -1,0 +1,68 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebGL Lab 1</title>
+  <script type="module" src="webgl-main.js"></script>
+
+  <script id="vertexShader" type="x-shader/x-vertex">#version 300 es
+
+    in vec2 a_position;
+    in vec4 a_color;
+
+    uniform mat3 u_matrix;
+
+    out vec4 v_color;
+
+    void main() {
+      gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+      gl_PointSize = 10.0;
+
+      v_color = a_color;
+    }
+
+  </script>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">#version 300 es
+
+  precision highp float;
+
+  in vec4 v_color;
+
+  out vec4 outColor;
+
+  void main() {
+    outColor = v_color;
+  }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: white;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 70vh;
+      outline: none;
+    }
+  </style>
+</head>
+
+<body>
+<div>
+  <canvas id="gl-canvas" tabindex="0"></canvas>
+  <button id="clear-canvas" type="button">Clear Canvas</button>
+  <input id="bg-color" type="color" value="#dfdfdf" /><label for="bg-color">Background Color</label>
+  <input id="sh-color" type="color" value="#000000" /><label for="sh-color">Shape Color</label>
+  <button id="point" type="button">Draw Point</button>
+  <button id="triangle" type="button">Draw Triangle</button>
+  <button id="circle" type="button">Draw Circle</button>
+</div>
+</body>
+
+</html>
