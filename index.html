@@ -44,21 +44,40 @@
       margin: 0;
       background-color: white;
     }
-    canvas {
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      align-items: center;
+    }
+
+    .grid-container > div {
+      text-align: center;
+      font-size: 10px;
+    }
+
+    #gl-canvas {
       display: block;
       width: 100vw;
-      height: 70vh;
+      height: 90vh;
       outline: none;
+      grid-column-start: 1;
+      grid-column-end: 4;
+    }
+
+    button {
+      height: 5vh;
     }
   </style>
 </head>
 
 <body>
-<div>
+<div class="grid-container">
   <canvas id="gl-canvas" tabindex="0"></canvas>
   <button id="clear-canvas" type="button">Clear Canvas</button>
-  <input id="bg-color" type="color" value="#dfdfdf" /><label for="bg-color">Background Color</label>
-  <input id="sh-color" type="color" value="#000000" /><label for="sh-color">Shape Color</label>
+  <div><input id="bg-color" type="color" value="#dfdfdf" /><label for="bg-color">Background Color</label></div>
+  <div><input id="sh-color" type="color" value="#000000" /><label for="sh-color">Shape Color</label></div>
+
   <button id="point" type="button">Draw Point</button>
   <button id="triangle" type="button">Draw Triangle</button>
   <button id="circle" type="button">Draw Circle</button>
