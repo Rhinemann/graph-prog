@@ -61,41 +61,6 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 /**
- * Creates a shader from the content of a script tag.
- *
- * @param {WebGLRenderingContext} gl The WebGL Context.
- * @param {string} scriptId The id of the script tag.
- * @param {WebGLShaderType} opt_shaderType. The type of shader to create.
- *     If not passed in will use the type attribute from the
- *     script tag.
- * @return {WebGLShader} A shader.
- */
-function createShaderFromScript(gl, scriptId, opt_shaderType) {
-    // look up the script tag by id.
-    const shaderScript = document.getElementById(scriptId);
-    if (!shaderScript) {
-        throw("*** Error: unknown script element" + scriptId);
-    }
-
-    // extract the contents of the script tag.
-    const shaderSource = shaderScript.text;
-
-    // If we didn't pass in a type, use the 'type' from
-    // the script tag.
-    if (!opt_shaderType) {
-        if (shaderScript.type === "x-shader/x-vertex") {
-            opt_shaderType = gl.VERTEX_SHADER;
-        } else if (shaderScript.type === "x-shader/x-fragment") {
-            opt_shaderType = gl.FRAGMENT_SHADER;
-        } else if (!opt_shaderType) {
-            throw("*** Error: shader type not set");
-        }
-    }
-
-    return compileShader(gl, shaderSource, opt_shaderType);
-}
-
-/**
  *
  * @param {WebGLRenderingContext} gl
  * @param {string} fileSource
@@ -110,22 +75,6 @@ async function createShaderFromFile(gl, fileSource, shaderType) {
     console.log(shaderText);
 
     return compileShader(gl, shaderText, shaderType)
-}
-
-/**
- * Creates a program from 2 script tags.
- *
- * @param {WebGLRenderingContext} gl The WebGL Context.
- * @param {string[]} shaderScriptIds Array of ids of the script
- *        tags for the shaders. The first is assumed to be the
- *        vertex shader, the second the fragment shader.
- * @return {WebGLProgram} A program
- */
-function createProgramFromScripts(
-    gl, shaderScriptIds) {
-    const vertexShader = createShaderFromScript(gl, shaderScriptIds[0], gl.VERTEX_SHADER);
-    const fragmentShader = createShaderFromScript(gl, shaderScriptIds[1], gl.FRAGMENT_SHADER);
-    return createProgram(gl, vertexShader, fragmentShader);
 }
 
 /**
@@ -156,4 +105,4 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
     return false;
 }
 
-export { createProgramFromScripts, createProgramFromFiles, resizeCanvasToDisplaySize }
+export { createProgramFromFiles, resizeCanvasToDisplaySize }
