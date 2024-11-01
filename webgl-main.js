@@ -1,12 +1,10 @@
 "use strict";
 
-import { createProgramFromScripts, createProgramFromFiles, resizeCanvasToDisplaySize } from "./webgl-utils.js";
+import { createProgramFromFiles, resizeCanvasToDisplaySize } from "./webgl-utils.js";
 import {MatrixOperations as m3} from "./matrix-operations.js";
 import * as geom from "./geometry-generators.js";
 import * as color_utils from "./color-utils.js";
-import * as sh_ut from "./shape-utils.js";
 import {Shape} from "./shape-utils.js";
-import {hexToRgb} from "./color-utils.js";
 
 async function main() {
     const canvas = document.querySelector("#gl-canvas");
@@ -265,5 +263,5 @@ function getColorInput(pickerId) {
     return color_utils.hexToRgb(document.getElementById(pickerId).value);
 }
 
-window.addEventListener("load", () => {main();})
+window.addEventListener("load", () => main(), false)
 
