@@ -1,11 +1,15 @@
 /**
+ * @typedef {(0x8B30|0x8B31)} WebGLShaderType
+ */
+
+/**
  * Creates and compiles a shader.
  *
- * @param {!WebGLRenderingContext} gl The WebGL Context.
+ * @param {WebGLRenderingContext} gl The WebGL Context.
  * @param {string} shaderSource The GLSL source code for the shader.
- * @param {number} shaderType The type of shader, VERTEX_SHADER or
+ * @param {WebGLShaderType} shaderType The type of shader, VERTEX_SHADER or
  *     FRAGMENT_SHADER.
- * @return {!WebGLShader} The shader.
+ * @return {WebGLShader} The shader.
  */
 function compileShader(gl, shaderSource, shaderType) {
     // Create the shader object
@@ -30,10 +34,10 @@ function compileShader(gl, shaderSource, shaderType) {
 /**
  * Creates a program from 2 shaders.
  *
- * @param {!WebGLRenderingContext) gl The WebGL context.
- * @param {!WebGLShader} vertexShader A vertex shader.
- * @param {!WebGLShader} fragmentShader A fragment shader.
- * @return {!WebGLProgram} A program.
+ * @param {WebGLRenderingContext} gl The WebGL context.
+ * @param {WebGLShader} vertexShader A vertex shader.
+ * @param {WebGLShader} fragmentShader A fragment shader.
+ * @return {WebGLProgram} A program.
  */
 function createProgram(gl, vertexShader, fragmentShader) {
     // create a program.
@@ -59,12 +63,12 @@ function createProgram(gl, vertexShader, fragmentShader) {
 /**
  * Creates a shader from the content of a script tag.
  *
- * @param {!WebGLRenderingContext} gl The WebGL Context.
+ * @param {WebGLRenderingContext} gl The WebGL Context.
  * @param {string} scriptId The id of the script tag.
- * @param {string} opt_shaderType. The type of shader to create.
+ * @param {WebGLShaderType} opt_shaderType. The type of shader to create.
  *     If not passed in will use the type attribute from the
  *     script tag.
- * @return {!WebGLShader} A shader.
+ * @return {WebGLShader} A shader.
  */
 function createShaderFromScript(gl, scriptId, opt_shaderType) {
     // look up the script tag by id.
@@ -92,18 +96,51 @@ function createShaderFromScript(gl, scriptId, opt_shaderType) {
 }
 
 /**
+ *
+ * @param {WebGLRenderingContext} gl
+ * @param {string} fileSource
+ * @param {WebGLShaderType} shaderType
+ */
+async function createShaderFromFile(gl, fileSource, shaderType) {
+    const response = await fetch(fileSource);
+    if (!response.ok) {
+        throw("Shader: " + fileSource + " not found!");
+    }
+    const shaderText = await response.text();
+    console.log(shaderText);
+
+    return compileShader(gl, shaderText, shaderType)
+}
+
+/**
  * Creates a program from 2 script tags.
  *
- * @param {!WebGLRenderingContext} gl The WebGL Context.
+ * @param {WebGLRenderingContext} gl The WebGL Context.
  * @param {string[]} shaderScriptIds Array of ids of the script
  *        tags for the shaders. The first is assumed to be the
  *        vertex shader, the second the fragment shader.
- * @return {!WebGLProgram} A program
+ * @return {WebGLProgram} A program
  */
 function createProgramFromScripts(
     gl, shaderScriptIds) {
     const vertexShader = createShaderFromScript(gl, shaderScriptIds[0], gl.VERTEX_SHADER);
     const fragmentShader = createShaderFromScript(gl, shaderScriptIds[1], gl.FRAGMENT_SHADER);
+    return createProgram(gl, vertexShader, fragmentShader);
+}
+
+/**
+ * Creates a program from 2 shader files.
+ *
+ * @param {WebGLRenderingContext} gl The WebGL Context.
+ * @param {string[]} shaderURLs Array of ids of the script
+ *        tags for the shaders. The first is assumed to be the
+ *        vertex shader, the second the fragment shader.
+ * @return {WebGLProgram} A program
+ */
+async function createProgramFromFiles(
+    gl, shaderURLs) {
+    const vertexShader = await createShaderFromFile(gl, shaderURLs[0], gl.VERTEX_SHADER);
+    const fragmentShader = await createShaderFromFile(gl, shaderURLs[1], gl.FRAGMENT_SHADER);
     return createProgram(gl, vertexShader, fragmentShader);
 }
 
@@ -119,4 +156,4 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
     return false;
 }
 
-export { createProgramFromScripts, resizeCanvasToDisplaySize }
+export { createProgramFromScripts, createProgramFromFiles, resizeCanvasToDisplaySize }

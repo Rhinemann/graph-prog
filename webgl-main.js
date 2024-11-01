@@ -1,6 +1,6 @@
 "use strict";
 
-import { createProgramFromScripts, resizeCanvasToDisplaySize } from "./webgl-utils.js";
+import { createProgramFromScripts, createProgramFromFiles, resizeCanvasToDisplaySize } from "./webgl-utils.js";
 import {MatrixOperations as m3} from "./matrix-operations.js";
 import * as geom from "./geometry-generators.js";
 import * as color_utils from "./color-utils.js";
@@ -8,13 +8,13 @@ import * as sh_ut from "./shape-utils.js";
 import {Shape} from "./shape-utils.js";
 import {hexToRgb} from "./color-utils.js";
 
-function main() {
+async function main() {
     const canvas = document.querySelector("#gl-canvas");
     const gl = canvas.getContext("webgl2");
 
     if (!gl) { return; }
 
-    const program = createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
+    const program = await createProgramFromFiles(gl, ["shaders/shader.vert", "shaders/shader.frag"]);
 
     const attributes = {
         positionLocation: gl.getAttribLocation(program, "a_position"),
